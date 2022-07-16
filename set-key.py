@@ -9,8 +9,6 @@ repo_dir = os.path.dirname(__file__)
 gpg_home = os.path.join(repo_dir, 'gpghome')
 key_dir = os.path.join(repo_dir, 'keys')
 
-# gpg --armor --export A7D927063079E2BE3626BD59B2FD86AC890B698D > mykey.asc
-
 def run(command: List[str]) -> str:
     return subprocess.run(command, cwd=repo_dir, capture_output=True, text=True, encoding='utf-8').stdout
 

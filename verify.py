@@ -7,10 +7,10 @@ import shutil
 from typing import Optional, Set, List
 
 repo_dir = os.path.dirname(__file__)
+if not repo_dir:
+    repo_dir = '.'
 gpg_home = os.path.join(repo_dir, 'gpghome')
 master_key = 'A7D927063079E2BE3626BD59B2FD86AC890B698D'
-
-# gpg --armor --export A7D927063079E2BE3626BD59B2FD86AC890B698D > mykey.asc
 
 def run_git(command: List[str]) -> str:
     result = subprocess.run(
