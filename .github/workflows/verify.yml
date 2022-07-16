@@ -7,7 +7,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
-    - Name: Check out branch
+    - name: Check out branch
       run: |
         git checkout ${{ github.ref }}
     - name: Verify
