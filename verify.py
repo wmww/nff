@@ -83,27 +83,34 @@ def required_key_of(commit: str) -> str:
     assert len(keys) == 1, 'could not determine the key that is required to sign'
     return list(keys)[0]
 
-def verify_commit(commit: str) -> None:
-    signing_key = signing_key_of(commit)
-    required_key = required_key_of(commit)
-    assert signing_key == required_key or signing_key == master_key, (
-        'signed with invalid key ' + signing_key +
-        ', needs to be signed with ' + required_key
-    )
+def verify_commit(commit: str) -> bool:
+    signing_key = ''
+    try:
+        signing_key = signing_key_of(commit)
+        required_key = required_key_of(commit)
+        assert signing_key == required_key, (
+            'signed with invalid key ' + signing_key +
+            ', needs to be signed with ' + required_key
+        )
+        print('  ' + commit + ' is valid')
+        return True
+    except AssertionError as e:
+        if signing_key == master_key:
+            print('  ' + commit + ' is valid (signed by master key)')
+            return True
+        else:
+            print('invalid commit ' + commit + ': ' + str(e))
+            return False
 
 def get_all_commits() -> List[str]:
     result = run_git(['log', '--pretty=tformat:%H'])
-    return result.splitlines()
+    return result.splitlines()[:-1]
 
 def verify_all_commits() -> None:
     failed = False
     for commit in get_all_commits():
-        try:
-            verify_commit(commit)
-            print('  ' + commit + ' is valid')
-        except AssertionError as e:
+        if not verify_commit(commit):
             failed = True
-            print('invalid commit ' + commit + ': ' + str(e))
     if failed:
         exit(1)
 
