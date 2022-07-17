@@ -9,10 +9,13 @@ jobs:
         fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
     - name: Check out branch
       run: |
-        git checkout $(git rev-list --parents -n 1 HEAD | cut -d' ' -f3)
+        COMMIT=$(git rev-list --parents -n 1 HEAD | cut -d' ' -f3)
+        git checkout main
+        cp verify.py verify-main.py
+        git checkout $COMMIT
     - name: Verify
       run: |
-        python3 verify.py
+        python3 verify-main.py
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
